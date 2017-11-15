@@ -1,9 +1,15 @@
 # MovieMaker
-Description: 
-Team Members:         Danny Gonzalez & Amandeep Kaur
-Platform:             MacOs
-Input Media Types:    Pictures(.jpg .png) and Videos(.mp4) stored locally on the computer
-Output Media Types:   Videos(.mp4) stored locally
+
+Description:
+
+Team Members:         Danny Gonzalez & Amandeep Kaur.
+
+Platform:             MacOs.
+
+Input Media Types:    Pictures(.jpg .png) and Videos(.mp4) stored locally on the computer.
+
+Output Media Types:   Videos(.mp4) stored locally.
+
 Libraries & Software: Python
                       PyQt
                       PyMovie
