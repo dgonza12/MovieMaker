@@ -14,8 +14,17 @@ Libraries & Software: Python
                       PyQt
                       PyMovie
 
-
-
+## TODO:
+### M1:
+* Basic UI window
+* can select load 2 video clips from disk  
+ place on timeline  
+ play/pause  
+### M2:
+* need to select video clip on timeline, move it
+user enter text subtitles, place on timeline
+### Misc:
+* get (2-4)sec video clips to use in demo
 
 ## Git from terminal
 
