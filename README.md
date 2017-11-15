@@ -33,7 +33,7 @@ How to clone this repo onto your machine:
 2. ```git clone https://github.com/dgonza12/MovieMaker```
 
 How to commit to github:
-1. Add to commit ```git add```
+1. Add to commit ```git add .```
 2. Create commit ```git commit -m "Commit message"```
 3. Push to github ```git push```
 
