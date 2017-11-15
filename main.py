@@ -18,7 +18,17 @@ from PyQt5.QtWidgets import QApplication, QSlider, QListWidgetItem ,QLabel, QLis
 from PyQt5.QtCore import QCoreApplication, pyqtSlot
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
- 
+
+class ClickableLabel(QLabel):
+    # when QLabel is clicked, emit a signal with a str parameter
+    clicked = pyqtSignal(QLabel)
+    
+    def __init(self, parent):
+        super().__init__(parent)
+        
+    def mousePressEvent(self, event):
+        self.clicked.emit(self)
+
 class Window(QWidget):
  
     def __init__(self):
@@ -109,7 +119,8 @@ class Window(QWidget):
         if (name[0]!= None):
             print(name[0])
             self.data.createClip(name[0])
-            thumb = QLabel(self)
+            thumb = ClickableLabel(self)
+            thumb.clicked.connect(self.mouseSel)
             #pic = QPixmap(photo_name)
             #thumb.setPixmap(pic)
             thumb.setText(name[0])
@@ -150,7 +161,10 @@ class Window(QWidget):
 
     def handleError(self):
         self.Play_btn.setEnabled(False)
-    
+        
+    def mouseSel(self, label):
+        print(label.text())
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Window()
