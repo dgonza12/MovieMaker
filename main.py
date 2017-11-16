@@ -185,7 +185,7 @@ class Window(QWidget):
             qmc = QMediaContent(QUrl.fromLocalFile("TempVideo.mp4"))
             self.mediaPlayer.setMedia(qmc)
             self.mediaPlayer.play()
-            self.Play_btn.setEnabled(true)
+            self.Play_btn.setEnabled(True)
         #Play TempVideo
         
     def Pause_Function(self):
