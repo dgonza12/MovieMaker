@@ -186,8 +186,7 @@ class Window(QWidget):
             self.mediaPlayer.setMedia(qmc)
             self.mediaPlayer.play()
             self.Play_btn.setEnabled(True)
-        #Play TempVideo
-        
+
     def Pause_Function(self):
         self.mediaPlayer.pause()
         
@@ -202,6 +201,7 @@ class Window(QWidget):
             Clip = self.data.givemeClip(self.ID)
             text = self.subtitlesText.text()
             self.data.addText(Clip,text)
+            self.subtitlesText.setText("")
             self.UpdateTimeline()
         print("add sub")
         
