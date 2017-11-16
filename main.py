@@ -10,6 +10,8 @@ Last edited:
 import sys
 import os
 import model
+from PyQt5 import QtCore
+
 
 from PyQt5.QtCore import QDir, Qt, QUrl
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
@@ -23,8 +25,10 @@ class ClickableLabel(QLabel):
     # when QLabel is clicked, emit a signal with a str parameter
     clicked = pyqtSignal(QLabel)
     
-    def __init(self, parent):
+    def __init(self,parent):
         super().__init__(parent)
+        self.ClipID = 0
+       
         
     def mousePressEvent(self, event):
         self.clicked.emit(self)
@@ -36,8 +40,9 @@ class Window(QWidget):
         self.initUI()
  
     def initUI(self):
-        #Define data:
+        #Define data & Variables:
         self.data = model.ClipModel()
+        self.ID = None
         
         #Define Window:
         self.setWindowTitle('Movie Maker')
@@ -45,12 +50,16 @@ class Window(QWidget):
         #Video Preview:
         self.mediaPlayer = QMediaPlayer(self)
         self.videoWidget = QVideoWidget(self)
+        self.videoWidget.show()
         self.videoWidget.resize(400, 300)
         self.mediaPlayer.setVideoOutput(self.videoWidget)
-        self.videoWidget.show()
+        
         self.positionSlider = QSlider(Qt.Horizontal, self)
         self.positionSlider.setRange(0, 0)
         self.positionSlider.sliderMoved.connect(self.setPosition)
+
+        #Labels
+        self.ClipName = QLabel(self)
         
         #Time Line:
         self.TimeLine = QListWidget(self)
@@ -59,6 +68,8 @@ class Window(QWidget):
         
         #TextEdits:
         self.projectName = QLineEdit(self)
+        self.subtitlesText = QLineEdit(self)
+        self.posText = QLineEdit(self)
         
         #Buttons:
         self.Add_btn = QPushButton('Add media', self)
@@ -73,13 +84,23 @@ class Window(QWidget):
         self.Pause_btn = QPushButton('pause',self)
         self.Pause_btn.clicked.connect(self.Pause_Function)
 
-
+        self.AddSub_btn = QPushButton('add subtitles',self)
+        self.AddSub_btn.clicked.connect(self.AddSub_Function)
+        
+        self.SetPos_btn = QPushButton('set start position',self)
+        self.SetPos_btn.clicked.connect(self.SetPos_Function)
+        
         #Layouts
         overall_layout = QVBoxLayout()
         first_row = QHBoxLayout()
         second_row = QHBoxLayout()
 
-        effects = QHBoxLayout()
+        effects = QVBoxLayout()
+        effects.addWidget(self.ClipName)
+        effects.addWidget(self.subtitlesText)
+        effects.addWidget(self.AddSub_btn)
+        effects.addWidget(self.posText)
+        effects.addWidget(self.SetPos_btn)
         
         preview = QVBoxLayout()
         preview.addWidget(self.videoWidget)
@@ -102,7 +123,7 @@ class Window(QWidget):
         second_row.addLayout(options)
 
         overall_layout.addLayout(first_row)
-        overall_layout.addStretch()
+        #overall_layout.addStretch()
         overall_layout.addLayout(second_row)
         self.setLayout(overall_layout)
 
@@ -114,16 +135,40 @@ class Window(QWidget):
         
         self.show()
         
+    def UpdateEffects(self):
+        if (self.ID != None):
+            Clip = self.data.givemeClip(self.ID)
+            self.ClipName.setText(Clip.name)
+            self.subtitlesText.setText("")
+            self.posText.setText(str (Clip.start))
+            
+        
+    def UpdateTimeline(self):
+        self.TimeLine.clear()
+        self.data.organizeData()
+        for clipy in self.data.data:
+            thumb = ClickableLabel(self)
+            thumb.clicked.connect(self.mouseSel)
+            thumb.ClipID = clipy.clipID
+            thumb.setStyleSheet('border: 5px Solid rgb(6,214,160)')
+            self.data.makePic(clipy)
+            pic = QPixmap("frame.png")
+            thumb.setPixmap(pic.scaled(100,100,QtCore.Qt.KeepAspectRatio))
+            item = QListWidgetItem()
+            item.setSizeHint(thumb.sizeHint())
+            self.TimeLine.addItem(item)
+            self.TimeLine.setItemWidget(item,thumb)
+    
     def Add_Function(self):
         name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Video files (*.mp4 )")
         if (name[0]!= None):
             print(name[0])
-            self.data.createClip(name[0])
+            clip = self.data.createClip(name[0])
             thumb = ClickableLabel(self)
             thumb.clicked.connect(self.mouseSel)
-            #pic = QPixmap(photo_name)
-            #thumb.setPixmap(pic)
-            thumb.setText(name[0])
+            thumb.ClipID = clip
+            pic = QPixmap("frame.png")
+            thumb.setPixmap(pic.scaled(100,100,QtCore.Qt.KeepAspectRatio))
             thumb.setStyleSheet('border: 5px Solid rgb(6,214,160)')
             item = QListWidgetItem()
             item.setSizeHint(thumb.sizeHint())
@@ -133,9 +178,10 @@ class Window(QWidget):
     def Play_Function(self):                   
         if os.path.isfile("TempVideo.mp4"):
             os.remove("TempVideo.mp4")
-        self.data.Preview()
-        qmc = QMediaContent(QUrl.fromLocalFile("TempVideo.mp4"))
-        self.mediaPlayer.setMedia(qmc)
+        if(self.data.IsEmpty() == 0):# 0 is false, 1 is true
+            self.data.Preview()
+            qmc = QMediaContent(QUrl.fromLocalFile("TempVideo.mp4"))
+            self.mediaPlayer.setMedia(qmc)
         #Play TempVideo
         
     def Pause_Function(self):
@@ -146,6 +192,22 @@ class Window(QWidget):
             name = self.projectName.text()
             self.projectName.setText("")
             self.data.Render(name)
+
+    def AddSub_Function(self):
+        if (self.ID != None):
+            Clip = self.data.givemeClip(self.ID)
+            text = self.subtitlesText.text()
+            self.data.addText(Clip,text)
+            self.UpdateTimeline()
+        print("add sub")
+        
+    def SetPos_Function(self):
+        if (self.ID != None):
+            Clip = self.data.givemeClip(self.ID)
+            Clip.start = int(self.posText.text())
+            self.data.organizeData()
+            self.UpdateTimeline()
+        print("Set Pos")
             
     def mediaStateChanged(self, state):
         print("state chnage");
@@ -163,7 +225,9 @@ class Window(QWidget):
         self.Play_btn.setEnabled(False)
         
     def mouseSel(self, label):
-        print(label.text())
+        self.ID = label.ClipID
+        self.UpdateEffects()
+        print(label.ClipID)
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
