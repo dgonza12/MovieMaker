@@ -2,7 +2,7 @@
 
 Description:
 
-Team Members:         Danny Gonzalez & Amandeep Kaur.
+Team Members:         Danny Gonzalez & Kai Kaur.
 
 Platform:             MacOs.
 
