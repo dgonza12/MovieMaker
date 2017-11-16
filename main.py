@@ -180,13 +180,16 @@ class Window(QWidget):
         if os.path.isfile("TempVideo.mp4"):
             os.remove("TempVideo.mp4")
         if(self.data.IsEmpty() == 0):# 0 is false, 1 is true
+            self.Play_btn.setEnabled(False)
             self.data.Preview()
             qmc = QMediaContent(QUrl.fromLocalFile("TempVideo.mp4"))
             self.mediaPlayer.setMedia(qmc)
+            self.mediaPlayer.play()
+            self.Play_btn.setEnabled(true)
         #Play TempVideo
         
     def Pause_Function(self):
-        self.mediaPlayer.play()
+        self.mediaPlayer.pause()
         
     def Render_Function(self):
         if self.projectName.text() != "":
@@ -223,7 +226,7 @@ class Window(QWidget):
         self.mediaPlayer.setPosition(position)
 
     def handleError(self):
-        self.Play_btn.setEnabled(False)
+        print("error")
         
     def mouseSel(self, label):
         self.ID = label.ClipID
