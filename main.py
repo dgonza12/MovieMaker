@@ -51,7 +51,7 @@ class Window(QWidget):
         self.mediaPlayer = QMediaPlayer(self)
         self.videoWidget = QVideoWidget(self)
         self.videoWidget.show()
-        self.videoWidget.resize(400, 300)
+        self.videoWidget.resize(400, 400)
         self.mediaPlayer.setVideoOutput(self.videoWidget)
         
         self.positionSlider = QSlider(Qt.Horizontal, self)
@@ -97,6 +97,7 @@ class Window(QWidget):
 
         effects = QVBoxLayout()
         effects.addWidget(self.ClipName)
+        effects.addStretch()
         effects.addWidget(self.subtitlesText)
         effects.addWidget(self.AddSub_btn)
         effects.addWidget(self.posText)
