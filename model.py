@@ -58,16 +58,17 @@ class ClipModel():
     def Preview(self):
         videoList = []
         for clip in self.data:
-            clip.video.set_start(clip.start)
-            videoList.append(clip.video)
+            #clip.video.set_start(clip.start)
+            videoList.append(clip.video.set_start(clip.start))
         final_clip = CompositeVideoClip(videoList)    
         final_clip.write_videofile("TempVideo.mp4",fps=15)
         
     def Render(self,name):
         videoList = []
         for clip in self.data:
+            clip.video.set_pos("center")
             clip.video.set_start(clip.start)
-            videoList.append(clip.video)
+            videoList.append(clip.video.set_start(clip.start))
         final_clip = CompositeVideoClip(videoList)
         filename = name +".mp4"
-        final_clip.write_videofile(filename)
+        final_clip.write_videofile(filename,fps=24)
