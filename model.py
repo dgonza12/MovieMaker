@@ -71,4 +71,3 @@ class ClipModel():
         final_clip = CompositeVideoClip(videoList)
         filename = name +".mp4"
         final_clip.write_videofile(filename)
-                                            
