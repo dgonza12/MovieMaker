@@ -5,14 +5,31 @@ from moviepy.editor import VideoFileClip
 from moviepy.video.tools.subtitles import SubtitlesClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
+
+
 class Clip():    
-    def __init__(self, source):
+    def __init__(self, source, IsImage):
         self.source = source
         self.name = os.path.splitext(source)[0]
-        self.video = VideoFileClip(source)
-        print(self.video.duration)
+        
+        if(IsImage != 0):
+            print("it's an image")
+            self.video = ImageClip(source)
+            self.duration = IsImage
+            self.video.set_duration(IsImage)
+            
+        else:
+            self.video = VideoFileClip(source)
+            self.duration = self.video.duration
+            
         self.start = 0
+        self.end = self.start + self.duration
         self.clipID = 0
+        
+    def setStart(self,start):
+        self.start = start
+        self.end = self.start + self.duration
+        print("start time changed!")
 
 class ClipModel():
     
@@ -37,38 +54,40 @@ class ClipModel():
     def organizeData(self):
         self.data.sort(key = lambda Clip: Clip.start)
 
-    def createClip(self,source):
+    def createClip(self,source,IsImage):
         self.organizeData()
-        newClip = Clip(source)
+        newClip = Clip(source,IsImage)
         newClip.video.save_frame("frame.png")
         self.counter = self.counter + 1
         newClip.clipID = self.counter
         if(self.IsEmpty() == 0):
             lastclip = self.data[len(self.data) - 1]
-            newClip.start = lastclip.video.duration + lastclip.start 
+            newClip.start = lastclip.duration + lastclip.start 
         self.data.append(newClip)        
         return (self.counter)
 
-    def addText(self,clip,text):
+    def addText(self,clip,text,s,e):
         vclip = clip.video
         tclip = TextClip(text,fontsize=70,color='white')
-        tclip = tclip.set_pos('center').set_duration(vclip.duration)
-        clip.video = CompositeVideoClip([vclip,tclip])
+        d = e-s
+        tclip = tclip.set_pos('center').set_duration(d)
+        clip.video = CompositeVideoClip([vclip,tclip.set_start(s)])
     
     def Preview(self):
         videoList = []
         for clip in self.data:
-            #clip.video.set_start(clip.start)
-            videoList.append(clip.video.set_start(clip.start))
-        final_clip = CompositeVideoClip(videoList)    
-        final_clip.write_videofile("TempVideo.mp4",fps=15)
+            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration))
+        final_clip = CompositeVideoClip(videoList)
+        final_clip.write_videofile("preview.mp4",fps=13,codec='libx264')
+        final_clip = VideoFileClip("preview.mp4")
+        final_clip.preview()
+        
         
     def Render(self,name):
         videoList = []
         for clip in self.data:
-            clip.video.set_pos("center")
-            clip.video.set_start(clip.start)
-            videoList.append(clip.video.set_start(clip.start))
+            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration))
         final_clip = CompositeVideoClip(videoList)
         filename = name +".mp4"
         final_clip.write_videofile(filename,fps=24)
+
