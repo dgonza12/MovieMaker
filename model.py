@@ -25,6 +25,7 @@ class Clip():
         self.start = 0
         self.end = self.start + self.duration
         self.clipID = 0
+        print("Video Duration:"+str(self.duration))
         
     def setStart(self,start):
         self.start = start
@@ -62,10 +63,22 @@ class ClipModel():
         newClip.clipID = self.counter
         if(self.IsEmpty() == 0):
             lastclip = self.data[len(self.data) - 1]
-            newClip.start = lastclip.duration + lastclip.start 
+            newClip.setStart(lastclip.end)  
         self.data.append(newClip)        
         return (self.counter)
 
+    def getSpacing(self,clip):
+        index = self.data.index(clip)
+        if(index < (len(self.data) - 1)):
+           nextClip = self.data[index + 1]
+           return (nextClip.start - clip.end)
+        else:
+           return 0
+
+    def Remove(self,clip):
+        self.data.remove(clip)
+        self.organizeData()
+    
     def addText(self,clip,text,s,e):
         vclip = clip.video
         tclip = TextClip(text,fontsize=70,color='white')
@@ -76,7 +89,7 @@ class ClipModel():
     def Preview(self):
         videoList = []
         for clip in self.data:
-            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration))
+            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration).set_pos("center"))
         final_clip = CompositeVideoClip(videoList)
         final_clip.write_videofile("preview.mp4",fps=13,codec='libx264')
         final_clip = VideoFileClip("preview.mp4")
@@ -86,7 +99,7 @@ class ClipModel():
     def Render(self,name):
         videoList = []
         for clip in self.data:
-            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration))
+            videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration).set_pos("center"))
         final_clip = CompositeVideoClip(videoList)
         filename = name +".mp4"
         final_clip.write_videofile(filename,fps=24)
