@@ -104,3 +104,4 @@ class ClipModel():
         filename = name +".mp4"
         final_clip.write_videofile(filename,fps=24)
 
+
