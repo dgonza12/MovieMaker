@@ -167,6 +167,7 @@ class Window(QWidget):
         self.TimeLine.clear()
         self.thumbList = []
         self.data.organizeData()
+        boo = 0#this is a boolean
         for clipy in self.data.data:
             thumb = ClickableLabel(self)
             thumb.clicked.connect(self.mouseSel)
@@ -178,13 +179,31 @@ class Window(QWidget):
             pic = pic.scaled(100 * clipy.duration,100)
             thumb.setPixmap(pic)#thumb.setPixmap(pic.scaled((100 * clipy.duration),100,QtCore.Qt.KeepAspectRatio))
             thumb.resize((100 * clipy.duration),100)
+
+
+            if(boo==0):
+                boo = 1
+                space = clipy.start
+                if(space > 0):
+                    label = QLabel(self)
+                    label.resize((100*space),100)
+                    label.setStyleSheet('border: ' + str((space)*50) +'px Solid rgb(239,71,111)')
+                    item = QListWidgetItem()            
+                    item.setSizeHint(label.sizeHint())
+                    self.TimeLine.addItem(item)
+                    self.TimeLine.setItemWidget(item,label)
+
+
+
             self.thumbList.append(thumb)
             item = QListWidgetItem()
             item.setToolTip("Start Pos: "+ str(clipy.start))
             item.setSizeHint(thumb.sizeHint())
             self.TimeLine.addItem(item)
             self.TimeLine.setItemWidget(item,thumb)
-
+            
+            
+                    
             space = self.data.getSpacing(clipy)
             print("Spacing: " + str(space))
             if(space > 0):
@@ -295,4 +314,5 @@ if __name__ == '__main__':
     window = Window()
     window.show()
     sys.exit(app.exec_())
+
 
