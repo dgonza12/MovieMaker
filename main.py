@@ -44,7 +44,7 @@ class Window(QWidget):
         self.thumbList = []
         
         #Define Window:
-        self.setWindowTitle('Movie Maker')
+        self.setWindowTitle('Kai Movie Maker')
         self.setGeometry(100, 100, 800, 600)
         
         #Labels
@@ -57,6 +57,17 @@ class Window(QWidget):
         self.subendHint.setText("Subtitle end time:")
         self.imageHint = QLabel(self)
         self.imageHint.setText("Image display time:")
+        self.projectsettingsHint = QLabel(self)
+        self.projectsettingsHint.setText("Project Settings")
+        self.projectnameHint = QLabel(self)
+        self.projectnameHint.setText("Project Name:")
+        self.mediasettingsHint = QLabel(self)
+        self.mediasettingsHint.setText("Media Settings:")
+        self.clipsettingsHint = QLabel(self)
+        self.clipsettingsHint.setText("Clip Settings")
+        self.subHint = QLabel(self)
+        self.subHint.setText("Subtitle:")
+        self.songnameHint = QLabel(self)
         #Time Line:
         self.TimeLine = QListWidget(self)
         self.TimeLine.setFlow(QListWidget.LeftToRight)
@@ -92,58 +103,65 @@ class Window(QWidget):
 
         self.Remove_btn = QPushButton('Remove',self)
         self.Remove_btn.clicked.connect(self.Remove_Function)
+
+        self.AddSong_btn = QPushButton('Add Song',self)
+        self.AddSong_btn.clicked.connect(self.AddSong_Function)
         
         #Layouts
         overall_layout = QVBoxLayout()
         first_row = QHBoxLayout()
-        second_row = QHBoxLayout()
 
-        effects = QVBoxLayout()
-        effects.addWidget(self.ClipName)
-
-        effectsrowOne = QHBoxLayout()
-        effectsrowOne.addWidget(self.videostartHint)
-        effectsrowOne.addWidget(self.posText)
-        effectsrowOne.addWidget(self.SetPos_btn)
-
-        effectsrowTwo = QHBoxLayout()      
-        effectsrowTwo.addWidget(self.subtitlesText)
-        effectsrowTwo.addWidget(self.AddSub_btn)
-
-        effectsrowThree = QHBoxLayout()
-        effectsrowThree.addWidget(self.substartHint)
-        effectsrowThree.addWidget(self.substartText)
-        effectsrowThree.addWidget(self.subendHint)
-        effectsrowThree.addWidget(self.subendText)
+        projectstuff = QVBoxLayout()
+        projectstuff.addWidget(self.projectsettingsHint)
+        NameRow = QHBoxLayout()
+        NameRow.addWidget(self.projectnameHint)
+        NameRow.addWidget(self.projectName)
+        projectstuff.addLayout(NameRow)
+        ButtonsRow = QHBoxLayout()
+        ButtonsRow.addWidget(self.Play_btn)
+        ButtonsRow.addWidget(self.Render_btn)
+        projectstuff.addLayout(ButtonsRow)
+        projectstuff.addWidget(self.mediasettingsHint)
+        projectstuff.addWidget(self.Add_btn)
+        ImageRow = QHBoxLayout()
+        ImageRow.addWidget(self.imageHint)
+        ImageRow.addWidget(self.imageText)
+        ImageRow.addWidget(self.AddImage_btn)
+        projectstuff.addLayout(ImageRow)
+        SongRow = QHBoxLayout()
+        SongRow.addWidget(self.songnameHint)
+        SongRow.addWidget(self.AddSong_btn)
+        projectstuff.addLayout(SongRow)
         
-        effects.addLayout(effectsrowOne)
-        effects.addLayout(effectsrowTwo)
-        effects.addLayout(effectsrowThree)
-        effects.addWidget(self.Remove_btn)
+        clipstuff = QVBoxLayout()
+        clipstuff.addWidget(self.clipsettingsHint)
+        clipstuff.addWidget(self.ClipName)
+        clipstuff.addWidget(self.Remove_btn)
+        rowone = QHBoxLayout()
+        rowone.addWidget(self.videostartHint)
+        rowone.addWidget(self.posText)
+        rowone.addWidget(self.SetPos_btn)
+        clipstuff.addLayout(rowone)
+        rowtwo = QHBoxLayout()
+        rowtwo.addWidget(self.subHint)
+        rowtwo.addWidget(self.subtitlesText)
+        rowtwo.addWidget(self.AddSub_btn)
+        clipstuff.addLayout(rowtwo)
+        rowthree = QHBoxLayout()
+        rowthree.addWidget(self.substartHint)
+        rowthree.addWidget(self.substartText)
+        rowthree.addWidget(self.subendHint)
+        rowthree.addWidget(self.subendText)
+        clipstuff.addLayout(rowthree)
         
-        timelineL = QHBoxLayout()
-        timelineL.addWidget(self.TimeLine)
         
-        options = QVBoxLayout()
-        optionsrow = QHBoxLayout()
-        optionsrow.addWidget(self.imageHint)
-        optionsrow.addWidget(self.imageText)
-        optionsrow.addWidget(self.AddImage_btn)
-        options.addWidget(self.Play_btn)
-        options.addWidget(self.Add_btn)
-        options.addLayout(optionsrow)
-        options.addWidget(self.projectName)
-        options.addWidget(self.Render_btn)
+        
 
-        first_row.addLayout(effects)
-
-
-        second_row.addLayout(timelineL)
-        second_row.addLayout(options)
+        first_row.addLayout(projectstuff)
+        first_row.addLayout(clipstuff)
 
         overall_layout.addLayout(first_row)
-        #overall_layout.addStretch()
-        overall_layout.addLayout(second_row)
+        overall_layout.addWidget(self.TimeLine)
         self.setLayout(overall_layout)
 
        
@@ -215,6 +233,10 @@ class Window(QWidget):
                 self.TimeLine.addItem(item)
                 self.TimeLine.setItemWidget(item,label)
                 
+    def AddSong_Function(self):
+        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"audio files (*.mp3 )")
+        self.data.setSong(name[0])
+        self.songnameHint.setText(name[0])
     
     def Add_Function(self):
         name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Video files (*.mp4 )")
