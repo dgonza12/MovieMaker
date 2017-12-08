@@ -37,7 +37,11 @@ class ClipModel():
     def __init__(self):
         self.data = []# 'Clip' objects will be stored here
         self.counter = 0# this is used to generate unique ID's for the clips
+        self.song = None
 
+    def setSong(self,source):
+        self.song = AudioFileClip(source)
+    
     def IsEmpty(self):
         if(len(self.data)==0):
             return 1
@@ -91,6 +95,8 @@ class ClipModel():
         for clip in self.data:
             videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration).set_pos("center"))
         final_clip = CompositeVideoClip(videoList)
+        if(self.song != None):
+            final_clip = final_clip.set_audio(self.song.set_duration(final_clip.duration))
         final_clip.write_videofile("preview.mp4",fps=13,codec='libx264')
         final_clip = VideoFileClip("preview.mp4")
         final_clip.preview()
@@ -101,7 +107,12 @@ class ClipModel():
         for clip in self.data:
             videoList.append(clip.video.set_start(clip.start).set_duration(clip.duration).set_pos("center"))
         final_clip = CompositeVideoClip(videoList)
+        if(self.song != None):
+            final_clip = final_clip.set_audio(self.song.set_duration(final_clip.duration))
         filename = name +".mp4"
         final_clip.write_videofile(filename,fps=24)
+
+
+
 
 
