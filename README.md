@@ -2,17 +2,20 @@
 
 Description:
 
+Proect Website: https://kaikaur0404.github.io/MovieMaker/
+
 Team Members:         Danny Gonzalez & Kai Kaur.
 
-Platform:             MacOs.
+Platform:             Windows
 
 Input Media Types:    Pictures(.jpg .png) and Videos(.mp4) stored locally on the computer.
 
 Output Media Types:   Videos(.mp4) stored locally.
 
 Libraries & Software: Python
-                      PyQt
+                      PyQt5
                       PyMovie
+                        -ImageMagick
 
 ## TODO:
 ### M1:
