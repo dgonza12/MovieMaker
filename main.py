@@ -44,7 +44,7 @@ class Window(QWidget):
         self.thumbList = []
         
         #Define Window:
-        self.setWindowTitle('Kai Movie Maker')
+        self.setWindowTitle('Movie Maker')
         self.setGeometry(100, 100, 800, 600)
         
         #Labels
@@ -83,7 +83,7 @@ class Window(QWidget):
         self.imageText = QLineEdit(self)
         self.imageText.setText("1")
         #Buttons:
-        self.Add_btn = QPushButton('Add Video', self)
+        self.Add_btn = QPushButton('Add Video or Gif', self)
         self.Add_btn.clicked.connect(self.Add_Function)
 
         self.AddImage_btn = QPushButton('Add Image', self)
@@ -234,12 +234,12 @@ class Window(QWidget):
                 self.TimeLine.setItemWidget(item,label)
                 
     def AddSong_Function(self):
-        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"audio files (*.mp3 )")
+        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Audio files (*.mp3 )")
         self.data.setSong(name[0])
         self.songnameHint.setText(name[0])
     
     def Add_Function(self):
-        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Video files (*.mp4 )")
+        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Video or Gif files (*.mp4 *.gif)")
         if (name[0]!= None):
             print(name[0])
             clip = self.data.createClip(name[0],0)
@@ -261,7 +261,7 @@ class Window(QWidget):
             self.TimeLine.setItemWidget(item,thumb)
 
     def AddImage_Function(self):
-        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.png *.jpg)")
+        name = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.png *.jpg )")
         if (name[0]!= None):
             print(name[0])
             time = float(self.imageText.text())
@@ -336,5 +336,8 @@ if __name__ == '__main__':
     window = Window()
     window.show()
     sys.exit(app.exec_())
+
+
+
 
 
