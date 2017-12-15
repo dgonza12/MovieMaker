@@ -1,14 +1,14 @@
 # MovieMaker
 
-Description:
+Description:          A simple video editor.    
 
-Proect Website: https://kaikaur0404.github.io/MovieMaker/
+Project Website:       https://kaikaur0404.github.io/MovieMaker/
 
 Team Members:         Danny Gonzalez & Kai Kaur.
 
 Platform:             Windows
 
-Input Media Types:    Pictures(.jpg .png) and Videos(.mp4) stored locally on the computer.
+Input Media Types:    Pictures(.jpg .png) and Videos(.mp4) and (.gif) stored locally on the computer.
 
 Output Media Types:   Videos(.mp4) stored locally.
 
@@ -16,18 +16,16 @@ Libraries & Software: Python
                       PyQt5
                       PyMovie
                         -ImageMagick
+## How to run:
+### Installation 
+(https://zulko.github.io/moviepy/install.html)
+1. install moviepy
+2. install and connect ImageMagick
+### Running from terminal
+1. cd into the repository containing the program files
+2. ```python main.py```
 
-## TODO:
-### M1:
-* Basic UI window
-* can select load 2 video clips from disk  
- place on timeline  
- play/pause  
-### M2:
-* need to select video clip on timeline, move it
-user enter text subtitles, place on timeline
-### Misc:
-* get (2-4)sec video clips to use in demo
+
 
 ## Git from terminal
 
